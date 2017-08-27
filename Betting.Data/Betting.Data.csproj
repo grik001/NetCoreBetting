@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Betting.Common\Betting.Common.csproj" />
+    <ProjectReference Include="..\Betting.Entities\Betting.Entities.csproj" />
+  </ItemGroup>
+
 </Project>
