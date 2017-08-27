@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Betting.Data.DataModels.BrandX;
+using Betting.Data.DataModels;
 
 namespace Betting.API.REST
 {
@@ -28,6 +30,9 @@ namespace Betting.API.REST
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddScoped<IGameDataModel, GameDataModel>();
+            services.AddScoped<IMessageDataModel, MessageDataModel>();
+
             services.AddMvc();
         }
 

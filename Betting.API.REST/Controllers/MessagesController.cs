@@ -10,7 +10,6 @@ using System.Net;
 
 namespace Betting.API.REST.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     public class MessagesController : Controller
     {

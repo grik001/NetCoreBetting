@@ -12,15 +12,14 @@ using Betting.Data.DataModels;
 
 namespace Betting.API.REST.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     public class GamesController : Controller
     {
         private IGameDataModel _gameDataModel;
 
-        public GamesController()
+        public GamesController(IGameDataModel gameDataModel)
         {
-            this._gameDataModel = new GameDataModel();
+            this._gameDataModel = gameDataModel;
         }
 
         [HttpGet]
