@@ -141,7 +141,7 @@ namespace Betting.AdminFront.MVC.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(AccountController.Login), "Home");
         }
 
         //
@@ -469,7 +469,7 @@ namespace Betting.AdminFront.MVC.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(GamesController.Index), "Home");
             }
         }
 
