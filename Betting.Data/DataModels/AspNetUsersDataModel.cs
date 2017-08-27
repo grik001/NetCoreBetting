@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Betting.Entities.Models;
 using Betting.Data.DataModels.BrandX;
+using System.Collections.Generic;
 
 namespace Betting.Data.DataModels
 {
@@ -11,6 +12,14 @@ namespace Betting.Data.DataModels
             using (var context = new BrandxStoreContext())
             {
                 return context.AspNetUsers.FirstOrDefault(x => x.Email == email);
+            }
+        }
+
+        public List<AspNetUsers> GetClients()
+        {
+            using (var context = new BrandxStoreContext())
+            {
+                return context.AspNetUsers.Where(x => x.AspNetUserRoles.Any(r => r.Role.Name == "Client")).ToList();
             }
         }
     }
