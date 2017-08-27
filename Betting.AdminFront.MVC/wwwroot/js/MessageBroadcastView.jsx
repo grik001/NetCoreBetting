@@ -43,8 +43,25 @@ class MessageList extends React.Component {
     };
 };
 
+class ClientEmailList extends React.Component {
+    state = { selectValue: '' }
+
+    handleChange = (event) => {
+        this.setState({ selectValue: e.target.value });
+    }
+
+    render() {
+        return (
+            <select value={this.state.selectValue} onChange={this.handleChange} >
+                {this.props.clients.map(client => <option key={client.id} value={client.id}>{client.email}</option>
+             )}
+            </select>
+        );
+    };
+};
+
 class MessageBox extends React.Component {
-    state = { messageText: [], messageTitle: [], messageTargetEmail: '' };
+    state = { messageText: [], messageTitle: [], messageTargetEmail: '', emails: [] };
 
     handleTitleChange = (event) => {
         this.setState({ messageTitle: event.target.value });
@@ -58,11 +75,10 @@ class MessageBox extends React.Component {
         this.setState({ messageTargetEmail: event.target.value });
     }
 
-
     handlePushMessage = (event) => {
         event.preventDefault();
 
-        var data = { Title: this.state.messageTitle, Text: this.state.messageText, }
+        var data = { Title: this.state.messageTitle, Text: this.state.messageText }
 
         axios.post("http://localhost:50048/api/messages", data).then(res => {
             this.setState({ messageTitle: "" });
@@ -79,6 +95,21 @@ class MessageBox extends React.Component {
         this.setState({ messageText: "" });
     }
 
+    componentWillMount() {
+        axios.get('http://localhost:50048/api/clients')
+            .then(res => {
+
+                console.log(res);
+
+                const clientData = res.data.entity.map(obj => ({
+                    id: obj.id, email: obj.email
+                }));
+
+                clientData.push({id: '', email: 'N/A'});
+                this.setState({ emails: clientData });    
+            });
+    }
+
     render() {
         return (
             <div className="col-md-12">
@@ -92,12 +123,7 @@ class MessageBox extends React.Component {
                 </div>
                 <label className="col-md-12">Target Client</label>
                 <div className="col-md-12">
-                    <select className="col-md-12">
-                        <option value="1">keith.a.gri@gmail.com</option>
-                        <option value="1">joe.a.gri@gmail.com</option>
-                        <option value="1">patrick.a.gri@gmail.com</option>
-                        <option value="1">ray.a.gri@gmail.com</option>
-                    </select>
+                    <ClientEmailList clients={this.state.emails} />
                 </div>
                 <label className="col-md-12">Text</label>
                 <div className="col-md-12">

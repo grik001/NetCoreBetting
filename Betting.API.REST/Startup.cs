@@ -32,6 +32,7 @@ namespace Betting.API.REST
             // Add framework services.
             services.AddScoped<IGameDataModel, GameDataModel>();
             services.AddScoped<IMessageDataModel, MessageDataModel>();
+            services.AddScoped<IAspNetUserDataModel, AspNetUsersDataModel>();
 
             services.AddCors(options =>
             {
