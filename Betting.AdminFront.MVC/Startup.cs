@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Betting.AdminFront.MVC.Data;
 using Betting.AdminFront.MVC.Models;
 using Betting.AdminFront.MVC.Services;
+using React.AspNet;
 
 namespace Betting.AdminFront.MVC
 {
@@ -47,6 +48,7 @@ namespace Betting.AdminFront.MVC
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddReact();
             services.AddMvc();
 
             // Add application services.
@@ -71,8 +73,8 @@ namespace Betting.AdminFront.MVC
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseReact(config =>{});
             app.UseStaticFiles();
-
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715

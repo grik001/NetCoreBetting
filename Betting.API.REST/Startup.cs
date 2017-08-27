@@ -33,6 +33,15 @@ namespace Betting.API.REST
             services.AddScoped<IGameDataModel, GameDataModel>();
             services.AddScoped<IMessageDataModel, MessageDataModel>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+            
             services.AddMvc();
         }
 
@@ -45,6 +54,7 @@ namespace Betting.API.REST
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseCors("CorsPolicy");
             app.UseMvc();
         }
     }
