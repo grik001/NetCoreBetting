@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
@@ -21,6 +20,12 @@
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Betting.Common\Betting.Common.csproj" />
+    <ProjectReference Include="..\Betting.Data\Betting.Data.csproj" />
+    <ProjectReference Include="..\Betting.Entities\Betting.Entities.csproj" />
   </ItemGroup>
 
 </Project>
