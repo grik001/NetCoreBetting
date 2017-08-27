@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Betting.API.REST
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -34,6 +34,9 @@ namespace Betting.API.REST
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            //Added to use JWT Helpers and partial class for Startup
+            ConfigureAuth(app);
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
