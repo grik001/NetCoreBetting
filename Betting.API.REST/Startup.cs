@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Betting.Data.DataModels.BrandX;
 using Betting.Data.DataModels;
+using Betting.Common.Helpers;
+using Betting.Common.Models;
+using Betting.Common.Helpers.IHelpers;
 
 namespace Betting.API.REST
 {
@@ -29,10 +32,15 @@ namespace Betting.API.REST
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettingsModel>(Configuration.GetSection("ApplicationSettings"));
+
             // Add framework services.
             services.AddScoped<IGameDataModel, GameDataModel>();
             services.AddScoped<IMessageDataModel, MessageDataModel>();
             services.AddScoped<IAspNetUserDataModel, AspNetUsersDataModel>();
+            services.AddSingleton<ICacheHelper, RedisCacheHelper>(); 
+
+            services.AddOptions();
 
             services.AddCors(options =>
             {
