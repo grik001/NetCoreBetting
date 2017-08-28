@@ -12,6 +12,7 @@ using Betting.Data.DataModels;
 using Betting.Common.Helpers;
 using Betting.Common.Models;
 using Betting.Common.Helpers.IHelpers;
+using Betting.API.REST.Helpers.WebSocketHelpers;
 
 namespace Betting.API.REST
 {
@@ -50,18 +51,22 @@ namespace Betting.API.REST
                     .AllowAnyHeader()
                     .AllowCredentials());
             });
-            
+
+            services.AddWebSocketManager();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             //Added to use JWT Helpers and partial class for Startup
             ConfigureAuth(app);
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseWebSockets();
+            app.MapWebSocketManager("/notifications", serviceProvider.GetService<NotificationsMessageHandler>());
 
             app.UseCors("CorsPolicy");
             app.UseMvc();

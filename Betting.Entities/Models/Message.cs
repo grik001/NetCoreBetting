@@ -10,6 +10,6 @@ namespace Betting.Entities.Models
         public string Title { get; set; }
         public string Text { get; set; }
         public DateTime? SendOn { get; set; }
-        public int? TargetClientId { get; set; }
+        public string TargetClientId { get; set; }
     }
 }

@@ -20,6 +20,7 @@
     render() {
         return (
             <div className="col-md-12 messageCard">
+                <div className="col-md-12"><h4>SEND TO:{this.props.TargetClient}</h4></div>
                 <div className="col-md-12"><h3>{this.props.title}</h3></div>
                 <div className="col-md-12"><h4>{this.props.text}</h4></div>
                 <div className="col-md-12">
@@ -36,7 +37,7 @@ class MessageList extends React.Component {
         return (
             <div className="col-md-12">
                 {this.props.data.map(message =>
-                    <MessageCard onChange={this.props.onChange} key={message.id} id={message.id} title={message.title} text={message.text} />
+                    <MessageCard onChange={this.props.onChange} key={message.id} id={message.id} title={message.title} text={message.text} TargetClient={message.TargetClient} />
                 )}
             </div>
         );
@@ -136,14 +137,14 @@ class MessageBox extends React.Component {
 };
 
 class App extends React.Component {
-    state = { messages: [], dataInActive: [] };
+    state = { messages: [] };
 
     fetchData = () => {
         axios.get('http://localhost:50048/api/messages')
             .then(res => {
                 console.log(res);
                 const messages = res.data.entity.map(obj => ({
-                    id: obj.id, title: obj.title, text: obj.text, targetClientID: obj.targetClientId
+                    id: obj.id, title: obj.title, text: obj.text, TargetClient: obj.targetClientId
                 }));
 
                 this.setState({ messages: messages });

@@ -193,7 +193,9 @@ namespace Betting.Entities.Models
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.TargetClientId).HasColumnName("TargetClientID");
+                entity.Property(e => e.TargetClientId)
+                    .HasColumnName("TargetClientID")
+                    .HasMaxLength(450);
 
                 entity.Property(e => e.Title).HasMaxLength(200);
             });
