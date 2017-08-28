@@ -13,6 +13,7 @@ using Betting.Common.Helpers.IHelpers;
 using static Betting.Common.Constants;
 using System.Net;
 using Betting.API.REST.Helpers;
+using Betting.API.REST.Helpers.WebSocketHelpers;
 
 namespace Betting.API.REST.Controllers
 {
@@ -21,15 +22,17 @@ namespace Betting.API.REST.Controllers
     {
         private IGameDataModel _gameDataModel;
         private ICacheHelper _cacheHelper;
+        private NotificationsMessageHandler _notificationsMessageHandler { get; set; }
 
-        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper)
+        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper, NotificationsMessageHandler notificationsMessageHandler)
         {
             this._gameDataModel = gameDataModel;
             this._cacheHelper = cachehelper;
+            this._notificationsMessageHandler = notificationsMessageHandler;
         }
 
         [HttpGet]
-        public IActionResult Get([FromQuery]bool? status = true)
+        public IActionResult Get([FromQuery]bool? status)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -44,7 +47,10 @@ namespace Betting.API.REST.Controllers
                     _cacheHelper.SetData<List<Game>>(CacheKey.GameList.ToString(), games);
                 }
 
-                games = games.Where(x => x.IsActive == status).ToList();
+                if (status.HasValue)
+                    games = games.Where(x => x.IsActive == status).ToList();
+
+                games = games.OrderByDescending(x => x.IsActive).ThenBy(x => x.Code).ToList();
 
                 result.Entity = games;
                 result.IsComplete = true;
@@ -94,10 +100,11 @@ namespace Betting.API.REST.Controllers
                     game = _gameDataModel.Insert(game);
 
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll(SocketMessageType.SingleGame, game);
+                    result.IsComplete = true;
                 }
 
                 result.Entity = game;
-                result.IsComplete = true;
             }
             catch (Exception ex)
             {

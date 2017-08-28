@@ -11,5 +11,10 @@ namespace Betting.Common
             GameList,
             ClientList
         }
+
+        public enum SocketMessageType
+        {
+            SingleGame
+        }
     }
 }
