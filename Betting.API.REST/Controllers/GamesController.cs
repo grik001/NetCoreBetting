@@ -9,6 +9,10 @@ using Betting.Entities.ViewModels;
 using System;
 using Betting.Data.DataModels.BrandX;
 using Betting.Data.DataModels;
+using Betting.Common.Helpers.IHelpers;
+using static Betting.Common.Constants;
+using System.Net;
+using Betting.API.REST.Helpers;
 
 namespace Betting.API.REST.Controllers
 {
@@ -16,10 +20,12 @@ namespace Betting.API.REST.Controllers
     public class GamesController : Controller
     {
         private IGameDataModel _gameDataModel;
+        private ICacheHelper _cacheHelper;
 
-        public GamesController(IGameDataModel gameDataModel)
+        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper)
         {
             this._gameDataModel = gameDataModel;
+            this._cacheHelper = cachehelper;
         }
 
         [HttpGet]
@@ -30,7 +36,14 @@ namespace Betting.API.REST.Controllers
             try
             {
                 List<Game> games = null;
-                games = _gameDataModel.Get();
+                games = _cacheHelper.GetData<List<Game>>(CacheKey.GameList.ToString());
+
+                if (games == null)
+                {
+                    games = _gameDataModel.Get();
+                    _cacheHelper.SetData<List<Game>>(CacheKey.GameList.ToString(), games);
+                }
+
                 games = games.Where(x => x.IsActive == status).ToList();
 
                 result.Entity = games;
@@ -79,6 +92,8 @@ namespace Betting.API.REST.Controllers
                 {
                     game.EntryTime = DateTime.UtcNow;
                     game = _gameDataModel.Insert(game);
+
+                    new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
                 }
 
                 result.Entity = game;
@@ -109,6 +124,8 @@ namespace Betting.API.REST.Controllers
                     gameDb.IsActive = game.IsActive;
                     gameDb = _gameDataModel.Update(gameDb);
 
+                    new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+
                     result.IsComplete = true;
                     result.Entity = gameDb;
                 }
@@ -135,6 +152,8 @@ namespace Betting.API.REST.Controllers
                 {
                     gameDb.IsActive = status;
                     gameDb = _gameDataModel.Update(gameDb);
+
+                    new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
 
                     result.IsComplete = true;
                     result.Entity = gameDb;
@@ -164,7 +183,11 @@ namespace Betting.API.REST.Controllers
 
                 if (!deleted)
                 {
-                    this.Response.StatusCode = 400;
+                    this.Response.StatusCode = (int)HttpStatusCode.BadGateway;
+                }
+                else
+                {
+                    new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
                 }
             }
             catch (Exception ex)
