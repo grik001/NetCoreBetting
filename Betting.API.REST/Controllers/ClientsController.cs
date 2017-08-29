@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Betting.Entities.ViewModels;
 using Betting.Data.DataModels.BrandX;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Betting.API.REST.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ClientsController : Controller
     {

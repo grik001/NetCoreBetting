@@ -17,6 +17,7 @@ using Betting.API.REST.Helpers.WebSocketHelpers;
 
 namespace Betting.API.REST.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class GamesController : Controller
     {

@@ -41,12 +41,12 @@
                 <div><h4>{this.props.Code}</h4></div>
                 <div className="col-md-12">
                     {this.props.IsActive ?
-                        <button onChange={this.props.onChange} onClick={this.handleDisableGame} className="col-md-6" width="100%" type="submit">Deactivate</button>
+                        <button onChange={this.props.onChange} onClick={this.handleDisableGame} style={{ marginRight: 5 }} className="col-md-6 btn btn-info btn-danger" width="100%" type="submit">Deactivate</button>
                         :
                         <div>
-                            <button onClick={this.handleEnableGame} className="col-md-4" width="100%" type="submit">Activate</button>
-                            <button onClick={this.handleDeleteGame} className="col-md-4" width="100%" type="submit">Delete</button>
-                            <button onClick={this.handleEdit} className="col-md-4" width="100%" type="submit">Edit</button>
+                            <button onClick={this.handleEnableGame} style={{ marginRight: 5 }} className="col-md-4 btn btn-success" width="100%" type="submit">Activate</button>
+                            <button onClick={this.handleDeleteGame} style={{ marginRight: 5 }} className="col-md-4 btn btn-danger" width="100%" type="submit">Delete</button>
+                            <button onClick={this.handleEdit} className="col-md-3 btn btn-info btn-warning" width="100%" type="submit">Edit</button>
                         </div>
                     }
                 </div>
@@ -65,10 +65,10 @@ class GameRow extends React.Component {
 
         return (
             <div style={{ padding: 20 }} className="row">
-                    {
-                        this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
-                    }
-                </div>
+                {
+                    this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
+                }
+            </div>
         );
     };
 };
@@ -81,7 +81,6 @@ class GameList extends React.Component {
 
     render() {
         var myGroupArr = []
-        //do { myGroupArr.push(this.props.data.splice(0, 3)) } while (this.props.data.length > 0)
 
         for (i = 0, j = this.props.data.length; i < j; i += 3) {
             var temparray = this.props.data.slice(i, i + 3);
@@ -92,7 +91,7 @@ class GameList extends React.Component {
             <form onSubmit={this.handleSubmit}>
                 <div className="col-md-12">
                     {
-                        myGroupArr.map(game => <GameRow key={myGroupArr.indexOf(game)} data={game} onChange={this.props.onChange} onEdit={this.props.onEdit}   />)
+                        myGroupArr.map(game => <GameRow key={myGroupArr.indexOf(game)} data={game} onChange={this.props.onChange} onEdit={this.props.onEdit} />)
                         //this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
                     }
                 </div>
@@ -103,25 +102,33 @@ class GameList extends React.Component {
 
 
 class GameModify extends React.Component {
-     render() {
+    render() {
         return (
             <div className="col-md-12">
-                <label className="col-md-12">Title</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleTitleChange} value={this.props.currentGame.code} type="text" />
+                <div className="row">
+                    <label className="col-md-12">Title</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleTitleChange} value={this.props.currentGame.code} type="text" />
+                    </div>
                 </div>
-                <label className="col-md-12">Description</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleDescriptionChange} className="form-control" value={this.props.currentGame.description} style={{ minWidth: "100%" }} />
+                <div className="row">
+                    <label className="col-md-12">Description</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleDescriptionChange} className="form-control" value={this.props.currentGame.description} style={{ minWidth: "100%" }} />
+                    </div>
                 </div>
-                <label className="col-md-12">ImageUrl</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleImageUrlChange} className="form-control" value={this.props.currentGame.imageUrl} style={{ minWidth: "100%" }} />
+                <div className="row">
+                    <label className="col-md-12">ImageUrl</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleImageUrlChange} className="form-control" value={this.props.currentGame.imageUrl} style={{ minWidth: "100%" }} />
+                    </div>
                 </div>
-                <div className="col-md-12">
-                    <button onClick={this.props.handlePushGame} className="col-md-6">Update</button>
-                    <button onClick={this.props.handleClearGame} className="col-md-6">Clear</button>
-                </div >
+                <div style={{marginTop : 10}} className="row">
+                    <div className="col-md-12">
+                        <button onClick={this.props.handlePushGame} style={{ marginRight: 5 }} className="col-md-3 btn btn-info btn-info">Update</button>
+                        <button onClick={this.props.handleClearGame} style={{ marginRight: 5 }} className="col-md-3 btn btn-info btn-warning">Clear</button>
+                    </div >
+                </div>
             </div>
         );
     };
@@ -132,6 +139,10 @@ class App extends React.Component {
     state = { dataActive: [], currentGame: { id: '', code: '', description: '', imageUrl: '' } };
 
     fetchData = () => {
+        console.log();
+
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
+
         axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games')
             .then(res => {
                 const games = res.data.entity.map(obj => ({
@@ -235,12 +246,11 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className="col-md-12">
-                    <h3>Games</h3>
+            <div className="col-md-12">
+                <div className="col-md-8">
                     <GameList onEdit={this.loadGame} data={this.state.dataActive} />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h3 >Manage Games</h3>
                     <GameModify handlePushGame={this.handlePushGame} handleTitleChange={this.handleTitleChange} handleDescriptionChange={this.handleDescriptionChange} handleImageUrlChange={this.handleImageUrlChange} handleClearGame={this.handleClearGame} currentGame={this.state.currentGame} />
                 </div>

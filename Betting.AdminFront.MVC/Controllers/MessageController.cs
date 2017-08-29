@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Betting.AdminFront.MVC.Controllers
 {
-    [Authorize(Roles = "Moderator")]
+    [Authorize]
     public class MessageController : Controller
     {
         public IActionResult Index()
