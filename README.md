@@ -1,4 +1,4 @@
-Basic Explanation:
+##Basic Explanation##
 
 The solution has been split up into 3 seperate projects. An API to be used as a gateway for both Fronts. A client MVC application which will connect to the API to retreive all the data and an Admin MVC application to manage the inventory.
 
