@@ -20,7 +20,6 @@
         var id = this.props.Id;
 
         axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id).then(res => {
-            this.props.onChange();
         });
     }
 
@@ -136,21 +135,32 @@ class App extends React.Component {
         this.connection = new WebSocket(uri)
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
+
             //var result = $.grep(this.state.dataActive, function (e) { return e.Id == resultObj.data.Id; });
+            if (resultObj.type == 'SingleGame') {
+                var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
 
-            var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
+                if (elementPos == -1) {
+                    console.log('inserting');
+                    this.state.dataActive.push(resultObj.data);
+                }
+                else {
+                    this.state.dataActive[elementPos] = resultObj.data
+                }
 
-            
-            if (elementPos == -1) {
-                console.log('inserting');
-                this.state.dataActive.push(resultObj.data);
+                this.setState({ dataActive: this.state.dataActive });
+                this.forceUpdate();
             }
-            else {
-                this.state.dataActive[elementPos] = resultObj.data
-            }
+            else if (resultObj.type == 'DeleteGame')
+            {
+                var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data);
+                if (elementPos > -1) {
+                    this.state.dataActive.splice(elementPos, 1);
+                }
 
-            this.setState({ dataActive: this.state.dataActive });
-            this.forceUpdate();
+                this.setState({ dataActive: this.state.dataActive });
+                this.forceUpdate();
+            }
         }
 
         this.connection.onerror = e => this.setState({ error: 'WebSocket error' })

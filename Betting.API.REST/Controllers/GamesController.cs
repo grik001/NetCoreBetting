@@ -180,7 +180,7 @@ namespace Betting.API.REST.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -197,6 +197,7 @@ namespace Betting.API.REST.Controllers
                 else
                 {
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll(SocketMessageType.DeleteGame, id);
                 }
             }
             catch (Exception ex)

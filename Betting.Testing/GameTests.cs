@@ -136,7 +136,7 @@ namespace Betting.Testing
         //Delete
 
         [TestMethod]
-        public void GameTest_DeleteData_Pass()
+        public async Task GameTest_DeleteData_Pass()
         {
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
@@ -146,7 +146,7 @@ namespace Betting.Testing
 
             var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
             var result = model.Delete(1);
-            var objectResult = result as ObjectResult;
+            var objectResult = await result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
 
             Assert.AreEqual(resultModel.IsComplete, true);
@@ -154,7 +154,7 @@ namespace Betting.Testing
         }
 
         [TestMethod]
-        public void GameTest_DeleteData_Fail()
+        public async Task GameTest_DeleteData_Fail()
         {
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
@@ -165,7 +165,7 @@ namespace Betting.Testing
 
             var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
             var result = model.Delete(1);
-            var objectResult = result as ObjectResult;
+            var objectResult = await result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
 
             Assert.AreEqual(resultModel.IsComplete, false);
