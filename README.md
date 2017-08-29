@@ -32,9 +32,9 @@ Data, Common, Entities.
 
 Data: Data contains all the code that connects with the database to retrieve any data. The code has been abstracted out of the controllers to allow change of Database if required.
 
-Common: Any repeated functions have also been abstracted out of the controllers. Also, any clients that connect to APIs have been abstracted here to allow IoC.
+Common: Any repeated functions have also been abstracted out of the controllers.
 
-Entities: This layer contains any View models shared between Fronts and all the Objects generated for the Database which are currently using the EntityFramework library.
+Entities: This layer contains View models shared between Fronts and all the Objects generated for the Database which are currently using the EntityFramework library.
 
 ###Running Application###
 
