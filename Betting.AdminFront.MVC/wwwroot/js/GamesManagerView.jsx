@@ -30,7 +30,6 @@
         this.props.onEdit(this.props.Id)
     }
 
-
     render() {
         return (
             <div className="col-md-4">
@@ -56,18 +55,46 @@
     };
 };
 
+
+class GameRow extends React.Component {
+    handleSubmit = (event) => {
+        event.preventDefault();
+    }
+
+    render() {
+
+        return (
+            <div style={{ padding: 20 }} className="row">
+                    {
+                        this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
+                    }
+                </div>
+        );
+    };
+};
+
+
 class GameList extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
     }
 
     render() {
+        var myGroupArr = []
+        //do { myGroupArr.push(this.props.data.splice(0, 3)) } while (this.props.data.length > 0)
+
+        for (i = 0, j = this.props.data.length; i < j; i += 3) {
+            var temparray = this.props.data.slice(i, i + 3);
+            myGroupArr.push(temparray);
+        }
+
         return (
             <form onSubmit={this.handleSubmit}>
                 <div className="col-md-12">
-                    {this.props.data.map(game =>
-                        <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />
-                    )}
+                    {
+                        myGroupArr.map(game => <GameRow key={myGroupArr.indexOf(game)} data={game} onChange={this.props.onChange} onEdit={this.props.onEdit}   />)
+                        //this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
+                    }
                 </div>
             </form>
         );
@@ -76,9 +103,7 @@ class GameList extends React.Component {
 
 
 class GameModify extends React.Component {
-
-
-    render() {
+     render() {
         return (
             <div className="col-md-12">
                 <label className="col-md-12">Title</label>
@@ -109,7 +134,6 @@ class App extends React.Component {
     fetchData = () => {
         axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games')
             .then(res => {
-
                 const games = res.data.entity.map(obj => ({
                     Id: obj.id, Code: obj.code, Description: obj.description, ImageUrl: obj.imageUrl, IsActive: obj.isActive, EntryTime: obj.entryTime
                 }));
@@ -136,12 +160,10 @@ class App extends React.Component {
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
 
-            //var result = $.grep(this.state.dataActive, function (e) { return e.Id == resultObj.data.Id; });
             if (resultObj.type == 'SingleGame') {
                 var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
 
                 if (elementPos == -1) {
-                    console.log('inserting');
                     this.state.dataActive.push(resultObj.data);
                 }
                 else {
@@ -151,8 +173,7 @@ class App extends React.Component {
                 this.setState({ dataActive: this.state.dataActive });
                 this.forceUpdate();
             }
-            else if (resultObj.type == 'DeleteGame')
-            {
+            else if (resultObj.type == 'DeleteGame') {
                 var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data);
                 if (elementPos > -1) {
                     this.state.dataActive.splice(elementPos, 1);
@@ -164,7 +185,7 @@ class App extends React.Component {
         }
 
         this.connection.onerror = e => this.setState({ error: 'WebSocket error' })
-        this.connection.onclose = e => !e.wasClean && this.setState({ error: `WebSocket error: ${e.code} ${e.reason}` })
+        this.connection.onclose = e => !e.wasClean && this.setState({ error: 'WebSocket error: ${e.code} ${e.reason}' })
     }
 
     handleTitleChange = (event) => {
@@ -186,7 +207,7 @@ class App extends React.Component {
         this.state.currentGame.id = '';
         this.state.currentGame.code = '';
         this.state.currentGame.description = '';
-        this.state.currentGame.imageurl = '';
+        this.state.currentGame.imageUrl = '';
         this.state.currentGame.isactive = '';
 
         this.setState({ currentGame: this.state.currentGame });
@@ -212,14 +233,12 @@ class App extends React.Component {
         }
     }
 
-
-
     render() {
         return (
             <div>
                 <div className="col-md-12">
                     <h3>Games</h3>
-                    <GameList onChange={this.fetchData} onEdit={this.loadGame} data={this.state.dataActive} />
+                    <GameList onEdit={this.loadGame} data={this.state.dataActive} />
                 </div>
                 <div className="col-md-12">
                     <h3 >Manage Games</h3>
