@@ -48,10 +48,10 @@ test@test.com Password: Test1234$
 
 VisualStudio Testing Framework has been used to generate a test project. Ideally you should use VS2017 to execute these tests.
 
-Step 1: Open Project using VS2017
-Step 2: Build
-Step 3: If build is sucessfully open Text Explorer found under the Test section.
-Step 4: Process to run all or specific tests using the menu.
+*Step 1: Open Project using VS2017
+*Step 2: Build
+*Step 3: If build is sucessfully open Text Explorer found under the Test section.
+*Step 4: Select process to run all or specific tests using the menu.
 
 
 
