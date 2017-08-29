@@ -4,37 +4,5 @@
 }
 
 <h2>Games Manager</h2>
-
 <div id="content"></div>
-
 <script src="@Url.Content("~/js/GamesManagerView.jsx")"></script>
-
-
-<script>
-
-    function Test()
-    {
-        var data = {
-            'username': 'keith.a.gri@gmail.com',
-            'password': 'Keith123$'
-        };
-
-         axios({
-            method: 'post',
-            url: 'http://brandxgatewayapirest.azurewebsites.net/api/token',
-            data: data,
-            headers: {
-                'Content-type': 'application/x-www-form-urlencoded'
-            }
-         }).then(res => {
-             console.log(res);
-        });
-
-
-        //axios.post("http://localhost:50048/api/token", data).then(res => {
-        //    this.setState({ gameTitle: "" });
-        //    this.setState({ gameDescription: "" });
-        //    this.setState({ gameImageUrl: "" });
-        //});
-    }
-</script>

@@ -3,7 +3,7 @@
         event.preventDefault();
         console.log("test");
         var id = this.props.id;
-        axios.delete("http://localhost:50048/api/messages/" + id).then(res => {
+        axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/messages/" + id).then(res => {
             this.props.onChange();
         });
     }
@@ -12,7 +12,7 @@
         event.preventDefault();
         var id = this.props.id;
 
-        axios.delete("http://localhost:50048/api/messages/" + id).then(res => {
+        axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/messages/" + id).then(res => {
             this.props.onChange();
         });
     }
@@ -81,7 +81,7 @@ class MessageBox extends React.Component {
 
         var data = { Title: this.state.messageTitle, Text: this.state.messageText }
 
-        axios.post("http://localhost:50048/api/messages", data).then(res => {
+        axios.post("http://brandxgatewayapirest.azurewebsites.net/messages", data).then(res => {
             this.setState({ messageTitle: "" });
             this.setState({ messageText: "" });
 
@@ -97,7 +97,7 @@ class MessageBox extends React.Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:50048/api/clients')
+        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/clients')
             .then(res => {
 
                 console.log(res);
@@ -140,7 +140,7 @@ class App extends React.Component {
     state = { messages: [] };
 
     fetchData = () => {
-        axios.get('http://localhost:50048/api/messages')
+        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/messages')
             .then(res => {
                 console.log(res);
                 const messages = res.data.entity.map(obj => ({

@@ -3,7 +3,7 @@
         event.preventDefault();
 
         var id = this.props.Id;
-        axios.put("http://localhost:50048/api/games/" + id + "/" + "true").then(res => {
+        axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id + "/" + "true").then(res => {
         });
     }
 
@@ -11,7 +11,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.put("http://localhost:50048/api/games/" + id + "/" + "false").then(res => {
+        axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id + "/" + "false").then(res => {
         });
     }
 
@@ -19,7 +19,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.delete("http://localhost:50048/api/games/" + id).then(res => {
+        axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id).then(res => {
             this.props.onChange();
         });
     }
@@ -121,7 +121,7 @@ class App extends React.Component {
 
     loadGame = (id) => {
 
-        axios.get('http://localhost:50048/api/games/' + id)
+        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games/' + id)
             .then(res => {
                 this.setState({ currentGame: res.data.entity });
             });
@@ -132,7 +132,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        var uri = "ws://" + "localhost:50048" + "/notifications?test=t";
+        var uri = "ws://" + "brandxgatewayapirest.azurewebsites.net" + "/notifications?test=t";
         this.connection = new WebSocket(uri)
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
@@ -192,12 +192,12 @@ class App extends React.Component {
 
         if (id == '' || id == null) {
             var data = { Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: false };
-            axios.post("http://localhost:50048/api/games", data).then(res => {
+            axios.post("http://brandxgatewayapirest.azurewebsites.net/api/games", data).then(res => {
             });
         }
         else {
             var data = { Id: this.state.currentGame.id, Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: this.state.currentGame.isactive };
-            axios.put("http://localhost:50048/api/games/" + data.Id, data).then(res => {
+            axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + data.Id, data).then(res => {
             });
         }
     }
