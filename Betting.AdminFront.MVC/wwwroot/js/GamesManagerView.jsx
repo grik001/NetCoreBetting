@@ -20,7 +20,7 @@
     handleDeleteGame = (event) => {
         event.preventDefault();
         var id = this.props.Id;
-        
+
         axios.delete("http://localhost:50048/api/games/" + id).then(res => {
             this.props.onChange();
         });
@@ -68,8 +68,8 @@ class GameList extends React.Component {
         return (
             <form onSubmit={this.handleSubmit}>
                 <div className="col-md-12">
-                    {this.props.data.map(movie =>
-                        <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={movie.Id} Id={movie.Id} Title={movie.Title} Description={movie.Description} IsActive={movie.IsActive} ImageUrl={movie.ImageUrl} />
+                    {this.props.data.map(game =>
+                        <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />
                     )}
                 </div>
             </form>
@@ -79,56 +79,6 @@ class GameList extends React.Component {
 
 
 class GameModify extends React.Component {
-    state = { currentGame: {} };
-
-    handleTitleChange = (event) => {
-        this.props.currentGame.Code = event.target.value;
-        this.setState({ currentGame: this.props.currentGame });
-        this.forceUpdate();
-
-    }
-
-    handleDescriptionChange = (event) => {
-        this.props.currentGame.Description = event.target.value;
-        this.setState({ currentGame: this.props.currentGame });
-        this.forceUpdate();
-
-    }
-
-    handleImageUrlChange = (event) => {
-        this.props.currentGame.ImageUrl = event.target.value;
-        this.setState({ currentGame: this.props.currentGame });
-        this.forceUpdate();
-    }
-
-    handlePushGame = (event) => {
-        event.preventDefault();
-
-        var data = { Id: this.props.currentGame.Id, Code: this.props.currentGame.Code, description: this.props.currentGame.Description, ImageUrl: this.props.currentGame.ImageUrl }
-
-        if (data.Id == '') {
-            axios.post("http://localhost:50048/api/games", data).then(res => {
-                this.setState({ gameTitle: "" });
-                this.setState({ gameDescription: "" });
-                this.setState({ gameImageUrl: "" });
-            });
-        }
-        else {
-            axios.post("http://localhost:50048/api/games/" + data.Id, data).then(res => {
-                this.setState({ gameTitle: "" });
-                this.setState({ gameDescription: "" });
-                this.setState({ gameImageUrl: "" });
-            });
-        }
-    }
-
-    handleClearGame = (event) => {
-        event.preventDefault();
-
-        this.setState({ gameTitle: "" });
-        this.setState({ gameDescription: "" });
-        this.setState({ gameImageUrl: "" });
-    }
 
 
     render() {
@@ -136,19 +86,19 @@ class GameModify extends React.Component {
             <div className="col-md-12">
                 <label className="col-md-12">Title</label>
                 <div className="col-md-12">
-                    <input onChange={this.handleTitleChange} value={this.props.currentGame.Title} type="text" />
+                    <input onChange={this.props.handleTitleChange} value={this.props.currentGame.code} type="text" />
                 </div>
                 <label className="col-md-12">Description</label>
                 <div className="col-md-12">
-                    <textarea onChange={this.handleDescriptionChange} className="form-control" value={this.props.currentGame.Description} style={{ minWidth: "100%" }}></textarea>
+                    <input onChange={this.props.handleDescriptionChange} className="form-control" value={this.props.currentGame.description} style={{ minWidth: "100%" }} />
                 </div>
                 <label className="col-md-12">ImageUrl</label>
                 <div className="col-md-12">
-                    <textarea onChange={this.handleImageUrlChange} className="form-control" value={this.props.currentGame.ImageUrl} style={{ minWidth: "100%" }}></textarea>
+                    <input onChange={this.props.handleImageUrlChange} className="form-control" value={this.props.currentGame.imageUrl} style={{ minWidth: "100%" }} />
                 </div>
                 <div className="col-md-12">
-                    <button onClick={this.handlePushGame} className="col-md-6">Update</button>
-                    <button onClick={this.handleClearGame} className="col-md-6">Clear</button>
+                    <button onClick={this.props.handlePushGame} className="col-md-6">Update</button>
+                    <button onClick={this.props.handleClearGame} className="col-md-6">Clear</button>
                 </div >
             </div>
         );
@@ -157,14 +107,14 @@ class GameModify extends React.Component {
 
 
 class App extends React.Component {
-    state = { dataActive: [], currentGame: {Id: '', Code : '', Description:'', ImageUrl:''} };
+    state = { dataActive: [], currentGame: { id: '', code: '', description: '', imageUrl: '' } };
 
     fetchData = () => {
-        axios.get('http://localhost:50048/api/games')
+        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games')
             .then(res => {
-                console.log(res);
+
                 const games = res.data.entity.map(obj => ({
-                    Id: obj.id, Title: obj.code, Description: obj.description, ImageUrl: obj.imageUrl, IsActive: obj.isActive
+                    Id: obj.id, Code: obj.code, Description: obj.description, ImageUrl: obj.imageUrl, IsActive: obj.isActive, EntryTime: obj.entryTime
                 }));
 
                 this.setState({ dataActive: games });
@@ -172,11 +122,10 @@ class App extends React.Component {
     }
 
     loadGame = (id) => {
-        
+
         axios.get('http://localhost:50048/api/games/' + id)
             .then(res => {
                 this.setState({ currentGame: res.data.entity });
-                console.log(this.state.currentGame);
             });
     }
 
@@ -185,16 +134,77 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        var uri = "ws://" + "localhost:50048" + "/notifications";
+        var uri = "ws://" + "localhost:50048" + "/notifications?test=t";
         this.connection = new WebSocket(uri)
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
-            this.state.dataActive.push(resultObj.data);
+            //var result = $.grep(this.state.dataActive, function (e) { return e.Id == resultObj.data.Id; });
+
+            var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
+
+            
+            if (elementPos == -1) {
+                console.log('inserting');
+                this.state.dataActive.push(resultObj.data);
+            }
+            else {
+                this.state.dataActive[elementPos] = resultObj.data
+            }
+
+            this.setState({ dataActive: this.state.dataActive });
             this.forceUpdate();
         }
+
         this.connection.onerror = e => this.setState({ error: 'WebSocket error' })
         this.connection.onclose = e => !e.wasClean && this.setState({ error: `WebSocket error: ${e.code} ${e.reason}` })
     }
+
+    handleTitleChange = (event) => {
+        this.state.currentGame.code = event.target.value;
+        this.setState({ currentGame: this.state.currentGame });
+    }
+
+    handleDescriptionChange = (event) => {
+        this.state.currentGame.description = event.target.value;
+        this.setState({ currentGame: this.state.currentGame });
+    }
+
+    handleImageUrlChange = (event) => {
+        this.state.currentGame.imageUrl = event.target.value;
+        this.setState({ currentGame: this.state.currentGame });
+    }
+
+    clearGame = () => {
+        this.state.currentGame.id = '';
+        this.state.currentGame.code = '';
+        this.state.currentGame.description = '';
+        this.state.currentGame.imageurl = '';
+        this.state.currentGame.isactive = '';
+
+        this.setState({ currentGame: this.state.currentGame });
+    }
+
+    handleClearGame = (event) => {
+        this.clearGame();
+    }
+
+    handlePushGame = (event) => {
+        var id = this.state.currentGame.id;
+
+
+        if (id == '' || id == null) {
+            var data = { Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: false };
+            axios.post("http://localhost:50048/api/games", data).then(res => {
+            });
+        }
+        else {
+            var data = { Id: this.state.currentGame.id, Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: this.state.currentGame.isactive };
+            axios.put("http://localhost:50048/api/games/" + data.Id, data).then(res => {
+            });
+        }
+    }
+
+
 
     render() {
         return (
@@ -205,7 +215,7 @@ class App extends React.Component {
                 </div>
                 <div className="col-md-12">
                     <h3 >Manage Games</h3>
-                    <GameModify currentGame={this.state.currentGame} />
+                    <GameModify handlePushGame={this.handlePushGame} handleTitleChange={this.handleTitleChange} handleDescriptionChange={this.handleDescriptionChange} handleImageUrlChange={this.handleImageUrlChange} handleClearGame={this.handleClearGame} currentGame={this.state.currentGame} />
                 </div>
             </div>
         );

@@ -69,8 +69,18 @@ namespace Betting.AdminFront.MVC.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    //var token = await new BrandxGatewayHelper(_clientHelper, _httpContextAccessor).GetToken(model.Email, model.Password);
+
+                    //if (!String.IsNullOrWhiteSpace(token))
+                    //{
+                        _logger.LogInformation(1, "User logged in.");
+                        return RedirectToLocal(returnUrl);
+                    //}
+                    //else
+                    //{
+                    //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    //    return View(model);
+                    //}
                 }
                 if (result.RequiresTwoFactor)
                 {

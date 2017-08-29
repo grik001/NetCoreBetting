@@ -22,9 +22,9 @@ namespace Betting.API.REST.Controllers
     {
         private IGameDataModel _gameDataModel;
         private ICacheHelper _cacheHelper;
-        private NotificationsMessageHandler _notificationsMessageHandler { get; set; }
+        private INotificationsMessageHandler _notificationsMessageHandler { get; set; }
 
-        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper, NotificationsMessageHandler notificationsMessageHandler)
+        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper, INotificationsMessageHandler notificationsMessageHandler)
         {
             this._gameDataModel = gameDataModel;
             this._cacheHelper = cachehelper;
@@ -116,7 +116,7 @@ namespace Betting.API.REST.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]Game game)
+        public async Task<IActionResult> Put(int id, [FromBody]Game game)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -132,6 +132,7 @@ namespace Betting.API.REST.Controllers
                     gameDb = _gameDataModel.Update(gameDb);
 
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll(SocketMessageType.SingleGame, gameDb);
 
                     result.IsComplete = true;
                     result.Entity = gameDb;
@@ -147,7 +148,7 @@ namespace Betting.API.REST.Controllers
         }
 
         [HttpPut("{id}/{status}")]
-        public IActionResult Put(int id, bool status)
+        public async Task<IActionResult> Put(int id, bool status)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -161,6 +162,7 @@ namespace Betting.API.REST.Controllers
                     gameDb = _gameDataModel.Update(gameDb);
 
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll(SocketMessageType.SingleGame, gameDb);
 
                     result.IsComplete = true;
                     result.Entity = gameDb;

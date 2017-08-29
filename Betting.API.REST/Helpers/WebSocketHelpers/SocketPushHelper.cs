@@ -10,9 +10,9 @@ namespace Betting.API.REST.Helpers.WebSocketHelpers
 {
     public class SocketPushHelper : ISocketPushHelper
     {
-        private NotificationsMessageHandler _notificationsMessageHandler { get; set; }
+        private IWebSocketHandler _notificationsMessageHandler { get; set; }
 
-        public SocketPushHelper(NotificationsMessageHandler notificationsMessageHandler)
+        public SocketPushHelper(IWebSocketHandler notificationsMessageHandler)
         {
             this._notificationsMessageHandler = notificationsMessageHandler;
         }
@@ -25,9 +25,11 @@ namespace Betting.API.REST.Helpers.WebSocketHelpers
 
         }
 
-        public async Task SendMessageToSingle(string id, string message)
+        public async Task SendMessageToSingle<T>(SocketMessageType type, string id, T data)
         {
-            await _notificationsMessageHandler.SendMessageToAllAsync(JsonConvert.SerializeObject(message));
+            var message = new { type = type.ToString(), data = data };
+            var json = JsonConvert.SerializeObject(message);
+            await _notificationsMessageHandler.SendMessageAsync(id, json);
         }
     }
 }

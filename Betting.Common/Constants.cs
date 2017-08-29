@@ -14,7 +14,8 @@ namespace Betting.Common
 
         public enum SocketMessageType
         {
-            SingleGame
+            SingleGame,
+            SingleMessage
         }
     }
 }

@@ -1,3 +1,4 @@
+using Betting.API.REST.Helpers.WebSocketHelpers;
 using Betting.Data.DataModels;
 using Betting.Data.DataModels.BrandX;
 using Betting.Entities.Models;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
+using System.Threading.Tasks;
+using static Betting.Common.Constants;
 
 namespace Betting.API.REST.Controllers
 {
@@ -14,10 +17,12 @@ namespace Betting.API.REST.Controllers
     public class MessagesController : Controller
     {
         private IMessageDataModel _messageDataModel;
+        private INotificationsMessageHandler _notificationsMessageHandler;
 
-        public MessagesController(IMessageDataModel messageDataModel)
+        public MessagesController(IMessageDataModel messageDataModel, INotificationsMessageHandler notificationsMessageHandler)
         {
             this._messageDataModel = messageDataModel;
+            this._notificationsMessageHandler = notificationsMessageHandler;
         }
 
         [HttpGet()]
@@ -66,7 +71,7 @@ namespace Betting.API.REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Insert([FromBody]Message message)
+        public async Task<IActionResult> Insert([FromBody]Message message)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -75,9 +80,17 @@ namespace Betting.API.REST.Controllers
                 message.EntryTime = DateTime.UtcNow;
                 message = _messageDataModel.Insert(message);
 
+                if (String.IsNullOrWhiteSpace(message.TargetClientId))
+                {
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll<Message>(SocketMessageType.SingleMessage, message);
+                }
+                else
+                {
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToSingle<Message>(SocketMessageType.SingleMessage, message.TargetClientId, message);
+                }
+
                 result.Entity = message;
                 result.IsComplete = true;
-
             }
             catch (Exception ex)
             {
