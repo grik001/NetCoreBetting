@@ -30,8 +30,21 @@
                 var value = "; " + document.cookie;
                 var parts = value.split("; " + name + "=");
                 if (parts.length == 2) return parts.pop().split(";").shift();
-            }
+        }
     </script>
+
+    <environment names="Development">
+        <script>
+            var gatewayUrl = "http://brandxgatewayapirest.azurewebsites.net";
+            var webSocketUrl = "brandxgatewayapirest.azurewebsites.net";
+        </script>
+    </environment>
+    <environment names="Staging,Production">
+        <script>
+            var gatewayUrl = "http://brandxgatewayapirest.azurewebsites.net";
+        </script>
+    </environment>
+
 
 </head>
 <body>

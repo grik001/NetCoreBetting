@@ -5,4 +5,11 @@
 
 <h2>Games Manager</h2>
 <div id="content"></div>
-<script src="@Url.Content("~/js/GamesManagerView.jsx")"></script>
+
+<environment names="Development">
+    <script src="@Url.Content("~/js/GamesManagerView.jsx")"></script>
+</environment>
+<environment names="Staging,Production">
+    <script src="@Url.Content("~/js/GamesManagerView.js")"></script>
+</environment>
+

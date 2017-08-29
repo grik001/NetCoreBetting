@@ -48,6 +48,7 @@ namespace Betting.AdminFront.MVC
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+
             services.AddReact();
             services.AddMvc();
 
@@ -73,12 +74,16 @@ namespace Betting.AdminFront.MVC
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseReact(config =>{});
+            app.UseReact(config =>
+            {
+               
+            });
+
             app.UseStaticFiles();
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
-
+      
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

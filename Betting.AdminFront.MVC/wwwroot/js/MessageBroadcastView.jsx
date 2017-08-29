@@ -3,7 +3,7 @@
         event.preventDefault();
         console.log("test");
         var id = this.props.id;
-        axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/messages/" + id).then(res => {
+        axios.delete(gatewayUrl+"/api/messages/" + id).then(res => {
             this.props.onChange();
         });
     }
@@ -73,7 +73,7 @@ class MessageBox extends React.Component {
         event.preventDefault();
         var data = { Title: this.state.messageTitle, Text: this.state.messageText }
 
-        axios.post("http://brandxgatewayapirest.azurewebsites.net/api/messages", data).then(res => {
+        axios.post(gatewayUrl+"/api/messages", data).then(res => {
             this.setState({ messageTitle: "" });
             this.setState({ messageText: "" });
 

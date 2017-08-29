@@ -3,7 +3,7 @@
         event.preventDefault();
 
         var id = this.props.Id;
-        axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id + "/" + "true").then(res => {
+        axios.put(gatewayUrl+"/api/games/" + id + "/" + "true").then(res => {
         });
     }
 
@@ -11,7 +11,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id + "/" + "false").then(res => {
+        axios.put(gatewayUrl+"/api/games/" + id + "/" + "false").then(res => {
         });
     }
 
@@ -19,7 +19,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.delete("http://brandxgatewayapirest.azurewebsites.net/api/games/" + id).then(res => {
+        axios.delete(gatewayUrl+"/api/games/" + id).then(res => {
         });
     }
 
@@ -143,7 +143,7 @@ class App extends React.Component {
 
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
 
-        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games')
+        axios.get(gatewayUrl+'/api/games')
             .then(res => {
                 const games = res.data.entity.map(obj => ({
                     Id: obj.id, Code: obj.code, Description: obj.description, ImageUrl: obj.imageUrl, IsActive: obj.isActive, EntryTime: obj.entryTime
@@ -155,7 +155,7 @@ class App extends React.Component {
 
     loadGame = (id) => {
 
-        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games/' + id)
+        axios.get(gatewayUrl +'/api/games/' + id)
             .then(res => {
                 this.setState({ currentGame: res.data.entity });
             });
@@ -166,7 +166,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        var uri = "ws://" + "brandxgatewayapirest.azurewebsites.net" + "/notifications?test=t";
+        var uri = "ws://" + webSocketUrl + "/notifications?token=";
         this.connection = new WebSocket(uri)
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
@@ -234,12 +234,12 @@ class App extends React.Component {
 
         if (id == '' || id == null) {
             var data = { Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: false };
-            axios.post("http://brandxgatewayapirest.azurewebsites.net/api/games", data).then(res => {
+            axios.post(gatewayUrl +"/api/games", data).then(res => {
             });
         }
         else {
             var data = { Id: this.state.currentGame.id, Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: this.state.currentGame.isactive };
-            axios.put("http://brandxgatewayapirest.azurewebsites.net/api/games/" + data.Id, data).then(res => {
+            axios.put(gatewayUrl+"/api/games/" + data.Id, data).then(res => {
             });
         }
     }
