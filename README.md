@@ -14,7 +14,7 @@ The database script has been included in the solution. A sample database has bee
 
 ###RedisCache###
 
-Redish cahce needs to be setup locally and the connectionstring will also need to be updated to be able to run the API. As an alternative a test RedisCache service has been left running on Azure to be able to run the application without installing Redis.
+Redis cache needs to be setup locally and the connectionstring will also need to be updated to be able to run the API. As an alternative a test RedisCache service has been left running on Azure to be able to run the application without installing Redis.
 
 ###Azure Hosting###
 
@@ -50,7 +50,6 @@ VisualStudio Testing Framework has been used to generate a test project. Ideally
 
 * Step 1: Open Project using VS2017
 * Step 2: Build
-* Step 3: If build is sucessfully open Text Explorer found under the Test section.
+* Step 3: If build is successfully open Text Explorer found under the Test section.
 * Step 4: Select process to run all or specific tests using the menu.
-
 
