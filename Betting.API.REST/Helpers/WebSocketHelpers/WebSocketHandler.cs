@@ -8,7 +8,26 @@ using System.Threading.Tasks;
 
 namespace Betting.API.REST.Helpers.WebSocketHelpers
 {
-    public abstract class WebSocketHandler
+    public interface IWebSocketHandler
+    {
+        Task OnConnected(WebSocket socket);
+
+        Task OnDisconnected(WebSocket socket);
+
+
+        Task SendMessageAsync(WebSocket socket, string message);
+
+
+        Task SendMessageAsync(string socketId, string message);
+
+
+        Task SendMessageToAllAsync(string message);
+        
+
+       Task ReceiveAsync(WebSocket socket, WebSocketReceiveResult result, byte[] buffer);
+    }
+
+    public abstract class WebSocketHandler : IWebSocketHandler
     {
         protected WebSocketConnectionManager WebSocketConnectionManager { get; set; }
 

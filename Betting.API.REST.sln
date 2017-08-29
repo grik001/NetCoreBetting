@@ -5,15 +5,15 @@ VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.API.REST", "Betting.API.REST\Betting.API.REST.csproj", "{385AE218-06FE-40CE-892D-487B7FB93328}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.ClientFront.MVC", "Betting.ClientFront.MVC\Betting.ClientFront.MVC.csproj", "{C2E960C9-BC45-4D77-B6CA-38D8EB06CF55}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.Data", "Betting.Data\Betting.Data.csproj", "{F9BD6390-F787-46D3-AAA2-598782B78091}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.Common", "Betting.Common\Betting.Common.csproj", "{8F255E9A-96DD-4B77-BD32-655655C48F83}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.Entities", "Betting.Entities\Betting.Entities.csproj", "{851A83D7-E9A5-4B38-89A0-0624C01AC6BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Betting.AdminFront.MVC", "Betting.AdminFront.MVC\Betting.AdminFront.MVC.csproj", "{4B15EF39-B322-4D4D-972A-5ABB1156F818}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Betting.AdminFront.MVC", "Betting.AdminFront.MVC\Betting.AdminFront.MVC.csproj", "{4B15EF39-B322-4D4D-972A-5ABB1156F818}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Betting.Testing", "Betting.Testing\Betting.Testing.csproj", "{09B76D73-133B-4BD0-9AB0-C278D346ECE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{385AE218-06FE-40CE-892D-487B7FB93328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{385AE218-06FE-40CE-892D-487B7FB93328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{385AE218-06FE-40CE-892D-487B7FB93328}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C2E960C9-BC45-4D77-B6CA-38D8EB06CF55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2E960C9-BC45-4D77-B6CA-38D8EB06CF55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2E960C9-BC45-4D77-B6CA-38D8EB06CF55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2E960C9-BC45-4D77-B6CA-38D8EB06CF55}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F9BD6390-F787-46D3-AAA2-598782B78091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F9BD6390-F787-46D3-AAA2-598782B78091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9BD6390-F787-46D3-AAA2-598782B78091}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{4B15EF39-B322-4D4D-972A-5ABB1156F818}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B15EF39-B322-4D4D-972A-5ABB1156F818}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B15EF39-B322-4D4D-972A-5ABB1156F818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09B76D73-133B-4BD0-9AB0-C278D346ECE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09B76D73-133B-4BD0-9AB0-C278D346ECE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09B76D73-133B-4BD0-9AB0-C278D346ECE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09B76D73-133B-4BD0-9AB0-C278D346ECE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

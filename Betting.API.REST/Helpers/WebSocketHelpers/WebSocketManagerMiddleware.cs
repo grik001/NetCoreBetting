@@ -92,7 +92,12 @@ namespace Betting.API.REST.Helpers.WebSocketHelpers
         }
     }
 
-    public class NotificationsMessageHandler : WebSocketHandler
+    public interface INotificationsMessageHandler : IWebSocketHandler
+    {
+
+    }
+
+    public class NotificationsMessageHandler : WebSocketHandler, INotificationsMessageHandler
     {
         public NotificationsMessageHandler(WebSocketConnectionManager webSocketConnectionManager) : base(webSocketConnectionManager)
         {

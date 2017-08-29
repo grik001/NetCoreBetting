@@ -18,6 +18,8 @@ namespace Betting.API.REST
 {
     public partial class Startup
     {
+        NotificationsMessageHandler notificationsMessageHandler = null;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -35,22 +37,26 @@ namespace Betting.API.REST
         {
             services.Configure<AppSettingsModel>(Configuration.GetSection("ApplicationSettings"));
 
-            // Add framework services.
-            services.AddScoped<IGameDataModel, GameDataModel>();
-            services.AddScoped<IMessageDataModel, MessageDataModel>();
-            services.AddScoped<IAspNetUserDataModel, AspNetUsersDataModel>();
-            services.AddSingleton<ICacheHelper, RedisCacheHelper>(); 
-
-            services.AddOptions();
-
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials());
+                    .AllowAnyOrigin()
+                        .AllowCredentials());
             });
+
+            // Add framework services.
+            services.AddScoped<IGameDataModel, GameDataModel>();
+            services.AddScoped<IMessageDataModel, MessageDataModel>();
+            services.AddScoped<IAspNetUserDataModel, AspNetUsersDataModel>();
+            services.AddSingleton<ICacheHelper, RedisCacheHelper>();
+            services.AddSingleton<INotificationsMessageHandler>(provider => notificationsMessageHandler);
+
+            services.AddOptions();
+
+
 
             services.AddWebSocketManager();
             services.AddMvc();
@@ -60,15 +66,18 @@ namespace Betting.API.REST
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             //Added to use JWT Helpers and partial class for Startup
-            ConfigureAuth(app);
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseWebSockets();
-            app.MapWebSocketManager("/notifications", serviceProvider.GetService<NotificationsMessageHandler>());
+
+            notificationsMessageHandler = serviceProvider.GetService<NotificationsMessageHandler>();
+            app.MapWebSocketManager("/notifications", notificationsMessageHandler);
 
             app.UseCors("CorsPolicy");
+
+            ConfigureAuth(app);
             app.UseMvc();
         }
     }
