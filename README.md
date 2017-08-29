@@ -10,13 +10,13 @@ The Games controller will be utilizing redis cache to maintain fast retrieval of
 
 ###Database###
 
-The database script has been included in the solution. A sample database has been left running on Azure to be able to test prototype without creating the database.
+The database script has been included in the solution. A sample database has been left running on Azure to be able to test prototype without creating the database. If creating database locally, create database named "BrandxStore" first and execute attached script. Sample data has also been included with the script.
 
 ###RedisCache###
 
-Redish cahce needs to be setup locally and the connectionstring will also need to be updated to be able to run the API. As an alternative a test RedisCache service has been left running on Azure to be able to run the application without installing Redis.
+Redis cache needs to be setup locally and the connectionstring will also need to be updated to be able to run the API. As an alternative a test RedisCache service has been left running on Azure to be able to run the application without installing Redis.
 
-###Hosting###
+###Azure Hosting###
 
 The API is hosted on azure thus no urls need to be updated upon running solution locally. I tried to also host the website on Azure but got stuck setting up React.
 
@@ -50,8 +50,6 @@ VisualStudio Testing Framework has been used to generate a test project. Ideally
 
 * Step 1: Open Project using VS2017
 * Step 2: Build
-* Step 3: If build is sucessfully open Text Explorer found under the Test section.
+* Step 3: If build is successfully open Text Explorer found under the Test section.
 * Step 4: Select process to run all or specific tests using the menu.
-
-
 
