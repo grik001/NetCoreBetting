@@ -4,7 +4,6 @@
 
         var id = this.props.Id;
         axios.put("http://localhost:50048/api/games/" + id + "/" + "true").then(res => {
-            this.props.onChange();
         });
     }
 
@@ -13,7 +12,6 @@
         var id = this.props.Id;
 
         axios.put("http://localhost:50048/api/games/" + id + "/" + "false").then(res => {
-            this.props.onChange();
         });
     }
 
@@ -42,15 +40,15 @@
                     :
                     <img width="100%" style={{ filter: 'grayscale(100%)' }} height="100%" src={this.props.ImageUrl} />
                 }
-                <div><h4>{this.props.Description}</h4></div>
+                <div><h4>{this.props.Code}</h4></div>
                 <div className="col-md-12">
                     {this.props.IsActive ?
                         <button onChange={this.props.onChange} onClick={this.handleDisableGame} className="col-md-6" width="100%" type="submit">Deactivate</button>
                         :
                         <div>
-                            <button onClick={this.handleEnableGame} className="col-md-6" width="100%" type="submit">Activate</button>
-                            <button onClick={this.handleDeleteGame} className="col-md-6" width="100%" type="submit">Delete</button>
-                            <button onClick={this.handleEdit} className="col-md-6" width="100%" type="submit">Edit</button>
+                            <button onClick={this.handleEnableGame} className="col-md-4" width="100%" type="submit">Activate</button>
+                            <button onClick={this.handleDeleteGame} className="col-md-4" width="100%" type="submit">Delete</button>
+                            <button onClick={this.handleEdit} className="col-md-4" width="100%" type="submit">Edit</button>
                         </div>
                     }
                 </div>

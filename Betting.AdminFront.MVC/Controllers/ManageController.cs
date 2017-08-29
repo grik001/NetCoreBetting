@@ -13,7 +13,7 @@ using Betting.AdminFront.MVC.Services;
 
 namespace Betting.AdminFront.MVC.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Moderator")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

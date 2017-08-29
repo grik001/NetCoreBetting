@@ -83,7 +83,7 @@ namespace Betting.AdminFront.MVC
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Game}/{action=Index}/{id?}");
+                    template: "{controller=Games}/{action=Index}/{id?}");
             });
         }
     }
