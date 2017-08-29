@@ -5,6 +5,7 @@ using Betting.Data.DataModels.BrandX;
 using Betting.Entities.Models;
 using Betting.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
@@ -23,12 +24,13 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Get()).Returns(new List<Game>());
             mockCacheHelper.Setup(x => x.GetData<List<Game>>(It.IsAny<string>())).Returns(new List<Game>());
             mockNotificationsMessageHandler.Setup(x => x.SendMessageToAllAsync(It.IsAny<string>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = model.Get(null);
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
@@ -42,10 +44,11 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Get()).Throws(new System.Exception());
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = model.Get(null);
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
@@ -61,12 +64,13 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Insert(It.IsAny<Game>())).Returns(new Game());
             mockCacheHelper.Setup(x => x.SetData<List<Game>>(It.IsAny<string>(), It.IsAny<List<Game>>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
-            var result = await model.Insert(new Game());
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
+            var result = await model.Insert(new Game() { Code = "test" });
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
 
@@ -80,12 +84,13 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Insert(It.IsAny<Game>())).Throws(new System.Exception());
             mockCacheHelper.Setup(x => x.SetData<List<Game>>(It.IsAny<string>(), It.IsAny<List<Game>>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
-            var result = await model.Insert(new Game());
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
+            var result = await model.Insert(new Game() { Code = "test" });
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
 
@@ -101,11 +106,12 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Get(It.IsAny<int>())).Returns(new Game());
             mockCacheHelper.Setup(x => x.SetData<List<Game>>(It.IsAny<string>(), It.IsAny<List<Game>>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = await model.Put(1, new Game());
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
@@ -120,11 +126,12 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Get(It.IsAny<int>())).Throws(new System.Exception());
             mockCacheHelper.Setup(x => x.SetData<List<Game>>(It.IsAny<string>(), It.IsAny<List<Game>>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = await model.Put(1, new Game());
             var objectResult = result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
@@ -141,10 +148,11 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Delete(It.IsAny<int>())).Returns(true);
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = model.Delete(1);
             var objectResult = await result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;
@@ -159,11 +167,12 @@ namespace Betting.Testing
             var mockGameDataModel = new Mock<IGameDataModel>();
             var mockCacheHelper = new Mock<ICacheHelper>();
             var mockNotificationsMessageHandler = new Mock<INotificationsMessageHandler>();
+            var mockLogger = new Mock<ILogger<GamesController>>();
 
             mockGameDataModel.Setup(x => x.Delete(It.IsAny<int>())).Throws(new System.Exception());
             mockCacheHelper.Setup(x => x.SetData<List<Game>>(It.IsAny<string>(), It.IsAny<List<Game>>()));
 
-            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object);
+            var model = new GamesController(mockGameDataModel.Object, mockCacheHelper.Object, mockNotificationsMessageHandler.Object, mockLogger.Object);
             var result = model.Delete(1);
             var objectResult = await result as ObjectResult;
             var resultModel = objectResult.Value as ResultViewModel;

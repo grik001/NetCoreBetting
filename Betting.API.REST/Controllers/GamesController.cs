@@ -14,6 +14,7 @@ using static Betting.Common.Constants;
 using System.Net;
 using Betting.API.REST.Helpers;
 using Betting.API.REST.Helpers.WebSocketHelpers;
+using Microsoft.Extensions.Logging;
 
 namespace Betting.API.REST.Controllers
 {
@@ -24,12 +25,16 @@ namespace Betting.API.REST.Controllers
         private IGameDataModel _gameDataModel;
         private ICacheHelper _cacheHelper;
         private INotificationsMessageHandler _notificationsMessageHandler { get; set; }
+        private ILogger _logger { get; set; }
 
-        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper, INotificationsMessageHandler notificationsMessageHandler)
+
+        public GamesController(IGameDataModel gameDataModel, ICacheHelper cachehelper, INotificationsMessageHandler notificationsMessageHandler
+            ,ILogger<GamesController> logger)
         {
             this._gameDataModel = gameDataModel;
             this._cacheHelper = cachehelper;
             this._notificationsMessageHandler = notificationsMessageHandler;
+            this._logger = logger;
         }
 
         [HttpGet]
@@ -58,7 +63,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
@@ -80,8 +85,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
@@ -109,7 +113,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
@@ -142,7 +146,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
@@ -173,8 +177,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
@@ -204,8 +207,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, "");
                 result.HasErrors = true;
             }
 
