@@ -17,6 +17,7 @@ using Betting.API.REST.Helpers.WebSocketHelpers;
 
 namespace Betting.API.REST.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class GamesController : Controller
     {
@@ -50,7 +51,7 @@ namespace Betting.API.REST.Controllers
                 if (status.HasValue)
                     games = games.Where(x => x.IsActive == status).ToList();
 
-                games = games.OrderByDescending(x => x.IsActive).ThenBy(x => x.Code).ToList();
+                games = games.OrderBy(x => x.Code).ToList();
 
                 result.Entity = games;
                 result.IsComplete = true;
@@ -94,7 +95,7 @@ namespace Betting.API.REST.Controllers
 
             try
             {
-                if (!_gameDataModel.Exists(game.Code))
+                if (game != null && !_gameDataModel.Exists(game.Code) && !String.IsNullOrWhiteSpace(game.Code))
                 {
                     game.EntryTime = DateTime.UtcNow;
                     game = _gameDataModel.Insert(game);
@@ -124,11 +125,12 @@ namespace Betting.API.REST.Controllers
             {
                 var gameDb = _gameDataModel.Get(id);
 
-                if (gameDb != null)
+                if (game != null && gameDb != null)
                 {
                     gameDb.Code = game.Code;
                     gameDb.Description = game.Description;
                     gameDb.IsActive = game.IsActive;
+                    gameDb.ImageUrl = game.ImageUrl;
                     gameDb = _gameDataModel.Update(gameDb);
 
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
@@ -180,7 +182,7 @@ namespace Betting.API.REST.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             ResultViewModel result = new ResultViewModel();
 
@@ -197,6 +199,7 @@ namespace Betting.API.REST.Controllers
                 else
                 {
                     new GamesCacheHelper(_gameDataModel, _cacheHelper).RefreshGameCache();
+                    await new SocketPushHelper(_notificationsMessageHandler).SendMessageToAll(SocketMessageType.DeleteGame, id);
                 }
             }
             catch (Exception ex)

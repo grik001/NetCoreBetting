@@ -12,6 +12,9 @@ using Microsoft.Extensions.Options;
 using Betting.AdminFront.MVC.Models;
 using Betting.AdminFront.MVC.Models.AccountViewModels;
 using Betting.AdminFront.MVC.Services;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Betting.AdminFront.MVC.Controllers
 {
@@ -69,18 +72,21 @@ namespace Betting.AdminFront.MVC.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    //var token = await new BrandxGatewayHelper(_clientHelper, _httpContextAccessor).GetToken(model.Email, model.Password);
+                    var token = await GetToken(model.Email, model.Password);
 
-                    //if (!String.IsNullOrWhiteSpace(token))
-                    //{
+                    Response.Cookies.Append("token", token);
+
+                    if (!String.IsNullOrWhiteSpace(token))
+                    {
                         _logger.LogInformation(1, "User logged in.");
                         return RedirectToLocal(returnUrl);
-                    //}
-                    //else
-                    //{
-                    //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    //    return View(model);
-                    //}
+                    }
+                    else
+                    {
+                        await _signInManager.SignOutAsync();
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View(model);
+                    }
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -151,7 +157,7 @@ namespace Betting.AdminFront.MVC.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation(4, "User logged out.");
-            return RedirectToAction(nameof(AccountController.Login), "Home");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
 
         //
@@ -479,8 +485,66 @@ namespace Betting.AdminFront.MVC.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(GamesController.Index), "Home");
+                return RedirectToAction(nameof(GamesController.Index), "Games");
             }
+        }
+
+        public async Task<string> GetToken(string username, string password)
+        {
+            try
+            {
+                var content = new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>("Username", username),
+                    new KeyValuePair<string, string>("Password", password)
+                };
+
+                string jsonResult = await Request(HttpMethod.Post, "http://brandxgatewayapirest.azurewebsites.net/api/token", content);
+                string token = JsonConvert.DeserializeObject<dynamic>(jsonResult)?.access_token;
+                return token;
+            }
+            catch (Exception ex)
+            {
+                //Log
+                return null;
+            }
+        }
+
+        public async Task<string> Request(HttpMethod method, string url, List<KeyValuePair<string, string>> formEncodedContent = null, List<KeyValuePair<string, string>> headers = null, string token = null, Object bodyObj = null)
+        {
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage();
+
+            request.Method = method;
+            request.RequestUri = new Uri(url);
+
+            if (formEncodedContent != null && formEncodedContent.Any())
+            {
+                var formContent = new FormUrlEncodedContent(formEncodedContent);
+                request.Content = formContent;
+            }
+
+            if (bodyObj != null)
+            {
+                request.Content = new StringContent(JsonConvert.SerializeObject(bodyObj), Encoding.UTF8, "application/json");
+            }
+
+            if (headers != null && headers.Any())
+            {
+                foreach (var header in headers)
+                {
+                    request.Headers.Add(header.Key, header.Value);
+                }
+            }
+
+            if (!String.IsNullOrWhiteSpace(token))
+            {
+                request.Headers.Add("authorization", $"bearer {token}");
+            }
+
+            var result = await client.SendAsync(request);
+            var content = result.Content.ReadAsStringAsync().Result;
+            return content;
         }
 
         #endregion

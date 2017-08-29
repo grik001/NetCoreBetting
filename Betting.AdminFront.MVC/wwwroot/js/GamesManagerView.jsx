@@ -3,8 +3,7 @@
         event.preventDefault();
 
         var id = this.props.Id;
-        axios.put("http://localhost:50048/api/games/" + id + "/" + "true").then(res => {
-            this.props.onChange();
+        axios.put(gatewayUrl+"/api/games/" + id + "/" + "true").then(res => {
         });
     }
 
@@ -12,8 +11,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.put("http://localhost:50048/api/games/" + id + "/" + "false").then(res => {
-            this.props.onChange();
+        axios.put(gatewayUrl+"/api/games/" + id + "/" + "false").then(res => {
         });
     }
 
@@ -21,8 +19,7 @@
         event.preventDefault();
         var id = this.props.Id;
 
-        axios.delete("http://localhost:50048/api/games/" + id).then(res => {
-            this.props.onChange();
+        axios.delete(gatewayUrl+"/api/games/" + id).then(res => {
         });
     }
 
@@ -33,7 +30,6 @@
         this.props.onEdit(this.props.Id)
     }
 
-
     render() {
         return (
             <div className="col-md-4">
@@ -42,15 +38,15 @@
                     :
                     <img width="100%" style={{ filter: 'grayscale(100%)' }} height="100%" src={this.props.ImageUrl} />
                 }
-                <div><h4>{this.props.Description}</h4></div>
+                <div><h4>{this.props.Code}</h4></div>
                 <div className="col-md-12">
                     {this.props.IsActive ?
-                        <button onChange={this.props.onChange} onClick={this.handleDisableGame} className="col-md-6" width="100%" type="submit">Deactivate</button>
+                        <button onChange={this.props.onChange} onClick={this.handleDisableGame} style={{ marginRight: 5 }} className="col-md-6 btn btn-info btn-danger" width="100%" type="submit">Deactivate</button>
                         :
                         <div>
-                            <button onClick={this.handleEnableGame} className="col-md-6" width="100%" type="submit">Activate</button>
-                            <button onClick={this.handleDeleteGame} className="col-md-6" width="100%" type="submit">Delete</button>
-                            <button onClick={this.handleEdit} className="col-md-6" width="100%" type="submit">Edit</button>
+                            <button onClick={this.handleEnableGame} style={{ marginRight: 5 }} className="col-md-4 btn btn-success" width="100%" type="submit">Activate</button>
+                            <button onClick={this.handleDeleteGame} style={{ marginRight: 5 }} className="col-md-4 btn btn-danger" width="100%" type="submit">Delete</button>
+                            <button onClick={this.handleEdit} className="col-md-3 btn btn-info btn-warning" width="100%" type="submit">Edit</button>
                         </div>
                     }
                 </div>
@@ -59,18 +55,45 @@
     };
 };
 
+
+class GameRow extends React.Component {
+    handleSubmit = (event) => {
+        event.preventDefault();
+    }
+
+    render() {
+
+        return (
+            <div style={{ padding: 20 }} className="row">
+                {
+                    this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
+                }
+            </div>
+        );
+    };
+};
+
+
 class GameList extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault();
     }
 
     render() {
+        var myGroupArr = []
+
+        for (i = 0, j = this.props.data.length; i < j; i += 3) {
+            var temparray = this.props.data.slice(i, i + 3);
+            myGroupArr.push(temparray);
+        }
+
         return (
             <form onSubmit={this.handleSubmit}>
                 <div className="col-md-12">
-                    {this.props.data.map(game =>
-                        <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />
-                    )}
+                    {
+                        myGroupArr.map(game => <GameRow key={myGroupArr.indexOf(game)} data={game} onChange={this.props.onChange} onEdit={this.props.onEdit} />)
+                        //this.props.data.map(game => <GameCard onChange={this.props.onChange} onEdit={this.props.onEdit} key={game.Id} Id={game.Id} Code={game.Code} Description={game.Description} IsActive={game.IsActive} ImageUrl={game.ImageUrl} EntryTime={game.EntryTime} />)
+                    }
                 </div>
             </form>
         );
@@ -79,27 +102,33 @@ class GameList extends React.Component {
 
 
 class GameModify extends React.Component {
-
-
     render() {
         return (
             <div className="col-md-12">
-                <label className="col-md-12">Title</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleTitleChange} value={this.props.currentGame.code} type="text" />
+                <div className="row">
+                    <label className="col-md-12">Title</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleTitleChange} value={this.props.currentGame.code} type="text" />
+                    </div>
                 </div>
-                <label className="col-md-12">Description</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleDescriptionChange} className="form-control" value={this.props.currentGame.description} style={{ minWidth: "100%" }} />
+                <div className="row">
+                    <label className="col-md-12">Description</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleDescriptionChange} className="form-control" value={this.props.currentGame.description} style={{ minWidth: "100%" }} />
+                    </div>
                 </div>
-                <label className="col-md-12">ImageUrl</label>
-                <div className="col-md-12">
-                    <input onChange={this.props.handleImageUrlChange} className="form-control" value={this.props.currentGame.imageUrl} style={{ minWidth: "100%" }} />
+                <div className="row">
+                    <label className="col-md-12">ImageUrl</label>
+                    <div className="col-md-12">
+                        <input className="form-control input-sm" onChange={this.props.handleImageUrlChange} className="form-control" value={this.props.currentGame.imageUrl} style={{ minWidth: "100%" }} />
+                    </div>
                 </div>
-                <div className="col-md-12">
-                    <button onClick={this.props.handlePushGame} className="col-md-6">Update</button>
-                    <button onClick={this.props.handleClearGame} className="col-md-6">Clear</button>
-                </div >
+                <div style={{marginTop : 10}} className="row">
+                    <div className="col-md-12">
+                        <button onClick={this.props.handlePushGame} style={{ marginRight: 5 }} className="col-md-3 btn btn-info btn-info">Update</button>
+                        <button onClick={this.props.handleClearGame} style={{ marginRight: 5 }} className="col-md-3 btn btn-info btn-warning">Clear</button>
+                    </div >
+                </div>
             </div>
         );
     };
@@ -110,9 +139,12 @@ class App extends React.Component {
     state = { dataActive: [], currentGame: { id: '', code: '', description: '', imageUrl: '' } };
 
     fetchData = () => {
-        axios.get('http://brandxgatewayapirest.azurewebsites.net/api/games')
-            .then(res => {
+        console.log();
 
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + getCookie('token');
+
+        axios.get(gatewayUrl+'/api/games')
+            .then(res => {
                 const games = res.data.entity.map(obj => ({
                     Id: obj.id, Code: obj.code, Description: obj.description, ImageUrl: obj.imageUrl, IsActive: obj.isActive, EntryTime: obj.entryTime
                 }));
@@ -123,7 +155,7 @@ class App extends React.Component {
 
     loadGame = (id) => {
 
-        axios.get('http://localhost:50048/api/games/' + id)
+        axios.get(gatewayUrl +'/api/games/' + id)
             .then(res => {
                 this.setState({ currentGame: res.data.entity });
             });
@@ -134,29 +166,37 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        var uri = "ws://" + "localhost:50048" + "/notifications?test=t";
+        var uri = "ws://" + webSocketUrl + "/notifications?token=";
         this.connection = new WebSocket(uri)
         this.connection.onmessage = e => {
             var resultObj = JSON.parse(e.data);
-            //var result = $.grep(this.state.dataActive, function (e) { return e.Id == resultObj.data.Id; });
 
-            var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
+            if (resultObj.type == 'SingleGame') {
+                var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data.Id);
 
-            
-            if (elementPos == -1) {
-                console.log('inserting');
-                this.state.dataActive.push(resultObj.data);
+                if (elementPos == -1) {
+                    this.state.dataActive.push(resultObj.data);
+                }
+                else {
+                    this.state.dataActive[elementPos] = resultObj.data
+                }
+
+                this.setState({ dataActive: this.state.dataActive });
+                this.forceUpdate();
             }
-            else {
-                this.state.dataActive[elementPos] = resultObj.data
-            }
+            else if (resultObj.type == 'DeleteGame') {
+                var elementPos = this.state.dataActive.map(function (x) { return x.Id; }).indexOf(resultObj.data);
+                if (elementPos > -1) {
+                    this.state.dataActive.splice(elementPos, 1);
+                }
 
-            this.setState({ dataActive: this.state.dataActive });
-            this.forceUpdate();
+                this.setState({ dataActive: this.state.dataActive });
+                this.forceUpdate();
+            }
         }
 
         this.connection.onerror = e => this.setState({ error: 'WebSocket error' })
-        this.connection.onclose = e => !e.wasClean && this.setState({ error: `WebSocket error: ${e.code} ${e.reason}` })
+        this.connection.onclose = e => !e.wasClean && this.setState({ error: 'WebSocket error: ${e.code} ${e.reason}' })
     }
 
     handleTitleChange = (event) => {
@@ -178,7 +218,7 @@ class App extends React.Component {
         this.state.currentGame.id = '';
         this.state.currentGame.code = '';
         this.state.currentGame.description = '';
-        this.state.currentGame.imageurl = '';
+        this.state.currentGame.imageUrl = '';
         this.state.currentGame.isactive = '';
 
         this.setState({ currentGame: this.state.currentGame });
@@ -194,26 +234,23 @@ class App extends React.Component {
 
         if (id == '' || id == null) {
             var data = { Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: false };
-            axios.post("http://localhost:50048/api/games", data).then(res => {
+            axios.post(gatewayUrl +"/api/games", data).then(res => {
             });
         }
         else {
             var data = { Id: this.state.currentGame.id, Code: this.state.currentGame.code, Description: this.state.currentGame.description, ImageUrl: this.state.currentGame.imageUrl, IsActive: this.state.currentGame.isactive };
-            axios.put("http://localhost:50048/api/games/" + data.Id, data).then(res => {
+            axios.put(gatewayUrl+"/api/games/" + data.Id, data).then(res => {
             });
         }
     }
 
-
-
     render() {
         return (
-            <div>
-                <div className="col-md-12">
-                    <h3>Games</h3>
-                    <GameList onChange={this.fetchData} onEdit={this.loadGame} data={this.state.dataActive} />
+            <div className="col-md-12">
+                <div className="col-md-8">
+                    <GameList onEdit={this.loadGame} data={this.state.dataActive} />
                 </div>
-                <div className="col-md-12">
+                <div className="col-md-4">
                     <h3 >Manage Games</h3>
                     <GameModify handlePushGame={this.handlePushGame} handleTitleChange={this.handleTitleChange} handleDescriptionChange={this.handleDescriptionChange} handleImageUrlChange={this.handleImageUrlChange} handleClearGame={this.handleClearGame} currentGame={this.state.currentGame} />
                 </div>

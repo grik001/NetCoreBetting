@@ -13,6 +13,7 @@ using static Betting.Common.Constants;
 
 namespace Betting.API.REST.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class MessagesController : Controller
     {

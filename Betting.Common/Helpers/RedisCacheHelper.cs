@@ -18,7 +18,7 @@ namespace Betting.Common.Helpers
             {
                 connection = new Lazy<ConnectionMultiplexer>(() =>
                 {
-                    return ConnectionMultiplexer.Connect(settings.Value.RedisConnectionString);//);
+                    return ConnectionMultiplexer.Connect(settings.Value.RedisConnectionString);
                 });
             }
         }
