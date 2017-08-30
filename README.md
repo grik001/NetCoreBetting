@@ -38,13 +38,14 @@ Entities: This layer contains View models shared between Fronts and all the Obje
 
 ###Running Application###
 
-The application was developed using Visual Studio 2017. Open the application and ensure that both applications: AdminFront and API are set as startup projects. Once set hit run. You do not need to update the Database and Redis connection string since these are hosted on Azure. 
+The application was developed using Visual Studio 2017. Open the application and ensure that both applications: AdminFront and API are set as startup projects. Once set, hit run. You do not need to update the Database and Redis connection string since these are hosted on Azure. 
 
 If you wish to run them locally then you will need to Generate the database and run Redis on your local machine.
 
-The following credentials can be used to login to test: Username: 
+The following credentials can be used to login to test: 
 
-test@test.com Password: Test1234$
+* Username: test@test.com 
+* Password: Test1234$
 
 ###UnitTests###
 
