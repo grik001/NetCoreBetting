@@ -8,6 +8,7 @@ using Betting.Data.DataModels.BrandX;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Betting.API.REST.Helpers;
+using Newtonsoft.Json;
 
 namespace Betting.API.REST.Controllers
 {
@@ -27,7 +28,11 @@ namespace Betting.API.REST.Controllers
         [HttpGet()]
         public IActionResult Get()
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Clients/Get values supplied");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -42,6 +47,7 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Clients/Get processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
     }

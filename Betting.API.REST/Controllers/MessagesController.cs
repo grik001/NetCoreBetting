@@ -34,7 +34,11 @@ namespace Betting.API.REST.Controllers
         [HttpGet()]
         public IActionResult Get([FromQuery]int? limit = 100)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Messages/Get values supplied : limit {limit}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -50,13 +54,18 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Messages/Get processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id, [FromQuery]int? limit)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Messages/Get-ByID values supplied : id {id} - limit {limit}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -71,13 +80,18 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Messages/Get-ByID processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody]Message message)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Messages/Insert values supplied : message {JsonConvert.SerializeObject(message)}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -102,13 +116,18 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Messages/Insert processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]Message message)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Messages/Put values supplied : id {id} : message {JsonConvert.SerializeObject(message)}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -132,13 +151,18 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Messages/Put processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Messages/Delete values supplied : id {id}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -158,6 +182,7 @@ namespace Betting.API.REST.Controllers
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Messages/Delete processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
     }
