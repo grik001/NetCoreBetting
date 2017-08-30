@@ -52,6 +52,6 @@ VisualStudio Testing Framework has been used to generate a test project. Ideally
 
 * Step 1: Open Project using VS2017
 * Step 2: Build
-* Step 3: If build is successfully open Text Explorer found under the Test section.
+* Step 3: If build is successful open Text Explorer found under the Test section.
 * Step 4: Select process to run all or specific tests using the menu.
 
