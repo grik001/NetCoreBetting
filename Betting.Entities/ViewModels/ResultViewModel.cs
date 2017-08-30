@@ -10,8 +10,9 @@ namespace Betting.Entities.ViewModels
         public bool IsComplete { get; set; }
         public bool HasErrors { get; set; }
         public List<string> Messages { get; set; }
+        public string Token { get; set; }
 
-        public ResultViewModel(dynamic entity, bool isComplete, bool hasErrors, List<string> messages) 
+        public ResultViewModel(dynamic entity, bool isComplete, bool hasErrors, List<string> messages)
         {
             this.Entity = entity;
             this.IsComplete = isComplete;
