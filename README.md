@@ -2,7 +2,7 @@
 
 The solution has been split up into 2 separate projects. An API to be used as a gateway for both Fronts. An Admin MVC application which will connect to the API to retrieve all the data and manage the inventory.
 
-All application have been implemented using the C# and .net core 1.1.
+All applications have been implemented using the C# and .net core 1.1.
 
 The API is using JWT to authenticate requests. It will also be pushing updates towards both website using websockets, the Microsoft library was used for the websocket implementation. 
 
