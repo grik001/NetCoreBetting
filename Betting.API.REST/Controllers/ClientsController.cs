@@ -19,7 +19,7 @@ namespace Betting.API.REST.Controllers
         private IAspNetUserDataModel _aspNetUserDataModel;
         private ILogger _logger;
 
-        public ClientsController(IAspNetUserDataModel aspNetUserDataModel, ILogger logger)
+        public ClientsController(IAspNetUserDataModel aspNetUserDataModel, ILogger<ClientsController> logger)
         {
             this._aspNetUserDataModel = aspNetUserDataModel;
             this._logger = logger;

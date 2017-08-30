@@ -24,7 +24,7 @@ namespace Betting.API.REST.Controllers
         private INotificationsMessageHandler _notificationsMessageHandler;
         private ILogger _logger;
 
-        public MessagesController(IMessageDataModel messageDataModel, INotificationsMessageHandler notificationsMessageHandler, ILogger logger)
+        public MessagesController(IMessageDataModel messageDataModel, INotificationsMessageHandler notificationsMessageHandler, ILogger<MessagesController> logger)
         {
             this._messageDataModel = messageDataModel;
             this._notificationsMessageHandler = notificationsMessageHandler;
