@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Betting.Entities.ViewModels;
 using Betting.Data.DataModels.BrandX;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using Betting.API.REST.Helpers;
 
 namespace Betting.API.REST.Controllers
 {
@@ -14,10 +16,12 @@ namespace Betting.API.REST.Controllers
     public class ClientsController : Controller
     {
         private IAspNetUserDataModel _aspNetUserDataModel;
+        private ILogger _logger;
 
-        public ClientsController(IAspNetUserDataModel aspNetUserDataModel)
+        public ClientsController(IAspNetUserDataModel aspNetUserDataModel, ILogger logger)
         {
             this._aspNetUserDataModel = aspNetUserDataModel;
+            this._logger = logger;
         }
 
         [HttpGet()]
@@ -34,8 +38,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Get-Clients failed");
                 result.HasErrors = true;
             }
 

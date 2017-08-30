@@ -40,7 +40,11 @@ namespace Betting.API.REST.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery]bool? status)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Get values supplied : status {status}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString(); 
 
             try
             {
@@ -63,17 +67,22 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Get Game failed values supplied : status {status}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Get processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Get-ByID values supplied : id {id}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -85,17 +94,22 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Get-ByID Game failed values supplied : id {id}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Get-ByID processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Insert([FromBody]Game game)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Insert values supplied : game {JsonConvert.SerializeObject(game)}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -113,17 +127,22 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Insert Message failed values supplied : game {JsonConvert.SerializeObject(game)}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Insert processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody]Game game)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Put values supplied : id {id} - game {JsonConvert.SerializeObject(game)}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -146,17 +165,22 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Put Game failed values supplied : id {id} -  game {JsonConvert.SerializeObject(game)}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Put processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpPut("{id}/{status}")]
         public async Task<IActionResult> Put(int id, bool status)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Put-UpdateStatus values supplied : id {id} - status {status}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -177,17 +201,22 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Put-UpdateStatus Game failed values supplied : id {id} -  status {status}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Put-UpdateStatus processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var token = Guid.NewGuid();
+            _logger.LogInformation($"Received message using Token:{token} Games/Delete values supplied : id {id}");
+
             ResultViewModel result = new ResultViewModel();
+            result.Token = token.ToString();
 
             try
             {
@@ -207,10 +236,11 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(LoggingEventCode.Exception, ex, "");
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Delete Game failed values supplied : id {id}");
                 result.HasErrors = true;
             }
 
+            _logger.LogInformation($"Games/Delete processed using Token:{token} sending result : {JsonConvert.SerializeObject(result)}");
             return new ObjectResult(result);
         }
 

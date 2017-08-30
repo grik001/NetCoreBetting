@@ -10,6 +10,9 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using static Betting.Common.Constants;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Betting.API.REST.Helpers;
 
 namespace Betting.API.REST.Controllers
 {
@@ -19,11 +22,13 @@ namespace Betting.API.REST.Controllers
     {
         private IMessageDataModel _messageDataModel;
         private INotificationsMessageHandler _notificationsMessageHandler;
+        private ILogger _logger;
 
-        public MessagesController(IMessageDataModel messageDataModel, INotificationsMessageHandler notificationsMessageHandler)
+        public MessagesController(IMessageDataModel messageDataModel, INotificationsMessageHandler notificationsMessageHandler, ILogger logger)
         {
             this._messageDataModel = messageDataModel;
             this._notificationsMessageHandler = notificationsMessageHandler;
+            this._logger = logger;
         }
 
         [HttpGet()]
@@ -41,8 +46,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Get Message failed values supplied : limit {limit}");
                 result.HasErrors = true;
             }
 
@@ -63,8 +67,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Get-ByID Message failed values supplied : id {id} - limit {limit}");
                 result.HasErrors = true;
             }
 
@@ -95,8 +98,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Insert Message failed values supplied : message {JsonConvert.SerializeObject(message)}");
                 result.HasErrors = true;
             }
 
@@ -126,8 +128,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Put Message failed values supplied : id {id} : message {JsonConvert.SerializeObject(message)}");
                 result.HasErrors = true;
             }
 
@@ -153,8 +154,7 @@ namespace Betting.API.REST.Controllers
             }
             catch (Exception ex)
             {
-                //Log
-
+                _logger.LogError(LoggingEventCode.Exception, ex, $"Delete Message failed values supplied : id {id}");
                 result.HasErrors = true;
             }
 
